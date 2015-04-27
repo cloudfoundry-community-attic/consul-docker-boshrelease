@@ -5,6 +5,8 @@ This BOSH release contains a pre-baked Docker image for running Consul in any da
 
 The repository is also a demonstration for how to package a public Docker image into a BOSH release to remove internet dependencies.
 
+Currently v1 includes consul v0.5.0 via the `progrium/consul:latest` image from April 26, 2015. See below for how to bump to newer version of this Docker image.
+
 Usage
 -----
 
@@ -58,3 +60,23 @@ releases:
 ### Override security groups
 
 Ensure that the security group (`consul` by default, see `templates/stub.yml`) opens the ports you need for clients to connect, such as 8500 and 8600.
+
+Development
+-----------
+
+To upgrade to a newer version of `progrium/consul` Docker image, run:
+
+```
+docker pull progrium/consul
+docker save progrium/consul \
+  > blobs/docker-images/progrium-consul.tgz
+```
+
+You can now create development releases to test it. To include the new docker image in a new BOSH final release:
+
+```
+bosh upload blobs
+git add .
+git commit -m "update progrium/consul image"
+bosh create release --final
+```
