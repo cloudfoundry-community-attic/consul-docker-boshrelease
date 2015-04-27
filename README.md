@@ -1,14 +1,18 @@
-# BOSH Release for consul-docker
+Run Consul with BOSH using Docker image
+=======================================
 
-## Usage
+This BOSH release contains a pre-baked Docker image for running Consul in any datacenter even if it has no internet connectivity, and will make all your security people happy. It requires no external internet like normal Docker use cases.
 
-To use this bosh release, first upload it to your bosh:
+The repository is also a demonstration for how to package a public Docker image into a BOSH release to remove internet dependencies.
+
+Usage
+-----
+
+To use this BOSH release, first upload it to your bosh and the `docker` release
 
 ```
-bosh target BOSH_HOST
-git clone https://github.com/cloudfoundry-community/consul-docker-boshrelease.git
-cd consul-docker-boshrelease
-bosh upload release releases/consul-docker-1.yml
+bosh upload release https://bosh.io/releases/cloudfoundry-community/consul-docker
+bosh upload release https://bosh.io/d/github.com/cf-platform-eng/docker-boshrelease
 ```
 
 For [bosh-lite](https://github.com/cloudfoundry/bosh-lite), you can quickly create a deployment manifest & deploy a cluster:
@@ -25,27 +29,32 @@ templates/make_manifest aws-ec2
 bosh -n deploy
 ```
 
+### Manual manifest setup
+
+To include this BOSH release in a Docker VM managed by BOSH you need the following job templates in the following order:
+
+```yaml
+jobs:
+- name: consul_docker_z1
+  templates:
+    # run docker daemon
+    - {name: docker, release: docker}
+    # warm docker image cache from bosh package
+    - {name: consul_docker_image, release: consul-docker}
+    # run containers (see properties.containers)
+    - {name: containers, release: docker}
+```
+
+You will need both `consul-docker` and `docker` releases:
+
+```yaml
+releases:
+- name: docker
+  version: latest
+- name: consul-docker
+  version: latest
+```
+
 ### Override security groups
 
-For AWS & Openstack, the default deployment assumes there is a `default` security group. If you wish to use a different security group(s) then you can pass in additional configuration when running `make_manifest` above.
-
-Create a file `my-networking.yml`:
-
-``` yaml
----
-networks:
-  - name: consul-docker1
-    type: dynamic
-    cloud_properties:
-      security_groups:
-        - consul-docker
-```
-
-Where `- consul-docker` means you wish to use an existing security group called `consul-docker`.
-
-You now suffix this file path to the `make_manifest` command:
-
-```
-templates/make_manifest openstack-nova my-networking.yml
-bosh -n deploy
-```
+Ensure that the security group (`consul` by default, see `templates/stub.yml`) opens the ports you need for clients to connect, such as 8500 and 8600.

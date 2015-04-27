@@ -11,10 +11,12 @@ update:
 jobs:
   - name: consul_docker_z1
     templates:
-      - name: docker
-        release: docker
-      - name: consul_docker_image
-        release: consul-docker
+      # run docker daemon
+      - {name: docker, release: docker}
+      # warm docker image cache from bosh package
+      - {name: consul_docker_image, release: consul-docker}
+      # run containers (see properties.containers)
+      - {name: containers, release: docker}
     instances: 1
     resource_pool: small_z1
     networks: (( merge ))
@@ -24,4 +26,15 @@ jobs:
 
 networks: (( merge ))
 
-properties: {}
+properties:
+  containers:
+    - name: consul
+      image: "progrium/consul"
+      command: "--server --bootstrap-expect=1"
+      bind_ports:
+        - "8300:8300"
+        - "8500:8500"
+        - "8600:8600"
+      bind_volumes:
+        - "/data"
+      memory: "256m"
