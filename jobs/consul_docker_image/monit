@@ -1,0 +1,5 @@
+check process consul_docker_image
+  with pidfile /var/vcap/sys/run/consul_docker_image/consul_docker_image.pid
+  start program "/var/vcap/jobs/consul_docker_image/bin/monit_debugger install_ctl '/var/vcap/jobs/consul_docker_image/bin/install_ctl start'"
+  stop program "/var/vcap/jobs/consul_docker_image/bin/monit_debugger install_ctl '/var/vcap/jobs/consul_docker_image/bin/install_ctl stop'"
+  group vcap

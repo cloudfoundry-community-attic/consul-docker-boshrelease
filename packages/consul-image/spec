@@ -1,0 +1,4 @@
+---
+name: consul-image
+dependencies: []
+files: [docker-images/progrium-consul.tgz]

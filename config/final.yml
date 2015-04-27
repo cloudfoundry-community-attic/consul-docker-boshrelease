@@ -1,0 +1,6 @@
+---
+final_name: consul-docker
+blobstore:
+  provider: s3
+  options:
+    bucket_name: consul-docker-boshrelease
