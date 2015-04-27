@@ -1,0 +1,20 @@
+---
+packages:
+- name: consul-image
+  version: 85e2b6831b31144184324bdcba65ee42e79ec05a
+  fingerprint: 85e2b6831b31144184324bdcba65ee42e79ec05a
+  sha1: bff8fa8ee577637e50cfe4f98fbe5b9e94571f2f
+  dependencies: []
+jobs:
+- name: consul_docker_image
+  version: 47e930d55ce9d85d60785c4a311563843fb0f8e3
+  fingerprint: 47e930d55ce9d85d60785c4a311563843fb0f8e3
+  sha1: 64e7c0c2910e9b5709db1d391db928aa707b4bc5
+license:
+  version: afac5d409de569150ec7063ad31fbd01148b23f3
+  fingerprint: afac5d409de569150ec7063ad31fbd01148b23f3
+  sha1: 6d234b71301275e1c532aa6818e78c07d0f37aa5
+commit_hash: 9ccfa9bf
+uncommitted_changes: true
+name: consul-docker
+version: '1'
